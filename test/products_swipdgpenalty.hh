@@ -87,7 +87,7 @@ struct SwipdgPenaltyProductBase
         << "difference: " << std::scientific << error;
   } // ... check(...)
 
-  GridProviderType grid_provider_;
+  const GridProviderType grid_provider_;
   const SpaceType space_;
   const ScalarType one_;
   const TensorType unit_matrix_;
