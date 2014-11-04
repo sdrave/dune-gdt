@@ -26,10 +26,10 @@ namespace GDT {
 
 
 template< class TestSpaceImp,
-          class GridViewImp = typename TestSpaceImp::GridViewType,
+          class GridPartViewImp= typename TestSpaceImp::GridViewType,
           class AnsatzSpaceImp = TestSpaceImp >
 class SystemAssembler
-  : public DSG::Walker< GridViewImp >
+  : public DSG::Walker< GridPartViewImp>
 {
   static_assert(std::is_base_of< SpaceInterface< typename TestSpaceImp::Traits >, TestSpaceImp >::value,
                 "TestSpaceImp has to be derived from SpaceInterface!");
@@ -37,8 +37,8 @@ class SystemAssembler
                 "AnsatzSpaceImp has to be derived from SpaceInterface!");
   static_assert(std::is_same< typename TestSpaceImp::RangeFieldType, typename AnsatzSpaceImp::RangeFieldType >::value,
                 "Types do not match!");
-  typedef DSG::Walker< GridViewImp >                                  BaseType;
-  typedef SystemAssembler<TestSpaceImp, GridViewImp, AnsatzSpaceImp > ThisType;
+  typedef DSG::Walker< GridPartViewImp>                                   BaseType;
+  typedef SystemAssembler<TestSpaceImp, GridPartViewImp, AnsatzSpaceImp > ThisType;
 public:
   typedef TestSpaceImp                           TestSpaceType;
   typedef AnsatzSpaceImp                         AnsatzSpaceType;
@@ -51,8 +51,8 @@ public:
   typedef DSG::ApplyOn::WhichEntity< GridViewType >       ApplyOnWhichEntity;
   typedef DSG::ApplyOn::WhichIntersection< GridViewType > ApplyOnWhichIntersection;
 
-  SystemAssembler(TestSpaceType test, AnsatzSpaceType ansatz, GridViewType grid_view)
-    : BaseType(grid_view)
+  SystemAssembler(TestSpaceType test, AnsatzSpaceType ansatz, GridPartViewImp grid_part_view)
+    : BaseType(grid_part_view)
     , test_space_(test)
     , ansatz_space_(ansatz)
   {}
@@ -226,8 +226,8 @@ public:
   }
 
 private:
-  const DS::PerThreadValue<const TestSpaceType> test_space_;
-  const DS::PerThreadValue<const AnsatzSpaceType> ansatz_space_;
+  const DS::PerThreadValue< const TestSpaceType > test_space_;
+  const DS::PerThreadValue< const AnsatzSpaceType > ansatz_space_;
 }; // class SystemAssembler
 
 
