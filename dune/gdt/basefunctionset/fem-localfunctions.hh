@@ -18,14 +18,14 @@ namespace BaseFunctionSet {
 
 
 // forward, to be used in the traits and to allow for specialization
-template< class BaseFunctionSetMapImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class BaseFunctionSetMapImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class FemLocalfunctionsWrapper
 {
   static_assert(AlwaysFalse< BaseFunctionSetMapImp >::value, "Untested for these dimensions!");
 };
 
 
-template< class BaseFunctionSetMapImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols >
+template< class BaseFunctionSetMapImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols >
 class FemLocalfunctionsWrapperTraits
 {
 public:
@@ -35,7 +35,7 @@ public:
 };
 
 
-template< class BaseFunctionSetMapImp, class DomainFieldImp, int domainDim, class RangeFieldImp, int rangeDim >
+template< class BaseFunctionSetMapImp, class DomainFieldImp, size_t domainDim, class RangeFieldImp, size_t rangeDim >
 class FemLocalfunctionsWrapper< BaseFunctionSetMapImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
   : public BaseFunctionSetInterface
         < FemLocalfunctionsWrapperTraits

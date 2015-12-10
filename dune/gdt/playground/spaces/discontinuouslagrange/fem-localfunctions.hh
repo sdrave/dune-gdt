@@ -39,7 +39,7 @@ namespace DiscontinuousLagrange {
 
 
 // forward, to be used in the traits and to allow for specialization
-template< class GridPartImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class GridPartImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class FemLocalfunctionsBased
 {
   static_assert(rangeDim == 1 && rangeDimCols == 1, "Not yet implemented (find suitable vector valued basis)!");
@@ -47,7 +47,7 @@ class FemLocalfunctionsBased
 };
 
 
-template< class GridPartImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols >
+template< class GridPartImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols >
 class FemLocalfunctionsBasedTraits
 {
   static_assert(polynomialOrder >= 1, "Wrong polOrder given!");
@@ -93,7 +93,7 @@ public:
   static const bool needs_grid_view = false;
   typedef double CommunicatorType;
 private:
-  template< class G, int p, class R, int r, int rC >
+  template< class G, size_t p, class R, size_t r, size_t rC >
   friend class FemLocalfunctionsBased;
 }; // class FemLocalfunctionsBasedTraits
 
@@ -208,7 +208,7 @@ private:
 #else // HAVE_DUNE_FEM_LOCALFUNCTIONS
 
 
-template< class GridPartImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class GridPartImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class FemLocalfunctionsBased
 {
   static_assert(Dune::AlwaysFalse< GridPartImp >::value, "You are missing dune-fem-localfunctions!");

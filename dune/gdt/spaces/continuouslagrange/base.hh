@@ -29,14 +29,14 @@ namespace Spaces {
 
 
 // forward, to allow for specialization
-template< class ImpTraits, int domainDim, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class ImpTraits, size_t domainDim, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class ContinuousLagrangeBase
 {
   static_assert(AlwaysFalse< ImpTraits >::value, "Untested for these dimensions!");
 };
 
 
-template< class ImpTraits, int domainDim, class RangeFieldImp, int rangeDim >
+template< class ImpTraits, size_t domainDim, class RangeFieldImp, size_t rangeDim >
 class ContinuousLagrangeBase< ImpTraits, domainDim, RangeFieldImp, rangeDim, 1 >
   : public SpaceInterface< ImpTraits >
 {

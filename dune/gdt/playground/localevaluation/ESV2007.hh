@@ -128,7 +128,7 @@ public:
     return std::make_tuple(diffusion_.local_function(entity), diffusive_flux_.local_function(entity));
   }
 
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const LocalfunctionTupleType localFuncs,
                       const Stuff::LocalfunctionSetInterface
                           < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& testBase,
@@ -140,7 +140,7 @@ public:
     return redirect_order(*local_diffusion, *local_diffusive_flux, testBase, ansatzBase);
   } // ... order(...)
 
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const LocalfunctionTupleType localFuncs,
                        const Stuff::LocalfunctionSetInterface
                            < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& test_base,
@@ -155,7 +155,7 @@ public:
   } // ... evaluate(...)
 
 private:
-  template< class R, int rLD, int rCLD, int rLDF, int rCLDF, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rLD, size_t rCLD, size_t rLDF, size_t rCLDF, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t redirect_order(const Stuff::LocalfunctionInterface
                             < EntityType, DomainFieldType, dimDomain, R, rLD, rCLD >& local_diffusion,
                         const Stuff::LocalfunctionInterface
@@ -173,7 +173,7 @@ private:
                     local_diffusive_flux.order()));
   } // ... redirect_order(...)
 
-  template< class R, int rLD, int rCLD, int rLDF, int rCLDF, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rLD, size_t rCLD, size_t rLDF, size_t rCLDF, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void redirect_evaluate(const Stuff::LocalfunctionInterface
                              < EntityType, DomainFieldType, dimDomain, R, rLD, rCLD >& /*local_diffusion*/,
                          const Stuff::LocalfunctionInterface
@@ -270,7 +270,7 @@ public:
                            diffusive_flux_.local_function(entity));
   }
 
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const LocalfunctionTupleType localFuncs,
                const Stuff::LocalfunctionSetInterface
                    < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& testBase,
@@ -284,7 +284,7 @@ public:
                           ansatzBase);
   } // ... order(...)
 
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const LocalfunctionTupleType localFuncs,
                 const Stuff::LocalfunctionSetInterface
                     < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& test_base,
@@ -303,7 +303,7 @@ public:
   } // ... evaluate(...)
 
 private:
-  template< class R, int rLD, int rCLD, int rLDT, int rCLDT, int rLDF, int rCLDF, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rLD, size_t rCLD, size_t rLDT, size_t rCLDT, size_t rLDF, size_t rCLDF, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t redirect_order(const Stuff::LocalfunctionInterface
                             < EntityType, DomainFieldType, dimDomain, R, rLD, rCLD >& local_diffusion_factor,
                         const Stuff::LocalfunctionInterface
@@ -325,7 +325,7 @@ private:
                     local_diffusive_flux.order()));
   } // ... redirect_order(...)
 
-  template< class R, int rLD, int rCLD, int rLDT, int rCLDT, int rLDF, int rCLDF, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rLD, size_t rCLD, size_t rLDT, size_t rCLDT, size_t rLDF, size_t rCLDF, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void redirect_evaluate(const Stuff::LocalfunctionInterface
                              < EntityType, DomainFieldType, dimDomain, R, rLD, rCLD >& /*local_diffusion_factor*/,
                          const Stuff::LocalfunctionInterface

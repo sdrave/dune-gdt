@@ -43,7 +43,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct order() method
    */
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const LocalfunctionTupleType& local_functions_tuple,
                const Stuff::LocalfunctionSetInterface
                    < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& testBase,
@@ -58,7 +58,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct evaluate() method
    */
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const LocalfunctionTupleType& local_functions_tuple,
                 const Stuff::LocalfunctionSetInterface
                     < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& testBase,
@@ -73,7 +73,7 @@ public:
   }
 
 private:
-  template< class R, int rDF, int rCDF, int rDT, int rCDT, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rDF, size_t rCDF, size_t rDT, size_t rCDT, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const Stuff::LocalfunctionInterface
                    < EntityType, DomainFieldType, dimDomain, R, rDF, rCDF >& local_diffusion_factor,
                const Stuff::LocalfunctionInterface
@@ -89,7 +89,7 @@ private:
         + std::max(ssize_t(ansatzBase.order()) - 1, ssize_t(0));
   } // ... order(...)
 
-  template< class R, int rDF, int rCDF, int rDT, int rCDT, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rDF, size_t rCDF, size_t rDT, size_t rCDT, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const Stuff::LocalfunctionInterface
                     < EntityType, DomainFieldType, dimDomain, R, rDF, rCDF >& /*local_diffusion_factor*/,
                 const Stuff::LocalfunctionInterface
@@ -104,7 +104,7 @@ private:
     static_assert(Dune::AlwaysFalse< R >::value, "Not implemented for these dimensions!");
   } // ... evaluate< ... >(...)
 
-  template< class R, int r >
+  template< class R, size_t r >
   void evaluate(const Stuff::LocalfunctionInterface
                     < EntityType, DomainFieldType, dimDomain, R, 1, 1 >& local_diffusion_factor,
                 const Stuff::LocalfunctionInterface

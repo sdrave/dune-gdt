@@ -108,7 +108,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct order() method
    */
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const LocalfunctionTupleType& localFuncs,
                const Stuff::LocalfunctionSetInterface
                    < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& testBase,
@@ -122,7 +122,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct evaluate() method
    */
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const LocalfunctionTupleType& localFuncs,
                 const Stuff::LocalfunctionSetInterface
                     < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& testBase,
@@ -169,7 +169,7 @@ private:
   /**
    *  \return localFunction.order() + (testBase.order() - 1) + (ansatzBase.order() - 1)
    */
-  template< class R, int rL, int rCL, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rL, size_t rCL, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t redirect_order(const Stuff::LocalfunctionInterface
                             < EntityType, DomainFieldType, dimDomain, R, rL, rCL >& localFunction,
                         const Stuff::LocalfunctionSetInterface
@@ -182,7 +182,7 @@ private:
          + std::max(ssize_t(ansatzBase.order()) - 1, ssize_t(0));
   } // size_t redirect_order( ... )
 
-//  template< class R, int rL, int rCL, int rT, int rCT, int rA, int rCA >
+//  template< class R, size_t rL, size_t rCL, size_t rT, size_t rCT, size_t rA, size_t rCA >
 //  void redirect_evaluate(const Stuff::LocalfunctionInterface
 //                             < EntityType, DomainFieldType, dimDomain, R, rL, rCL >& /*localFunction*/,
 //                         const Stuff::LocalfunctionSetInterface
@@ -199,7 +199,7 @@ private:
    *  \brief  Computes an elliptic evaluation for a scalar local function and scalar or vector valued basefunctionsets.
    *  \tparam R RangeFieldType
    */
-  template< class R, int r >
+  template< class R, size_t r >
   void evaluate(const Stuff::LocalfunctionInterface
                              < EntityType, DomainFieldType, dimDomain, R, 1, 1 >& localFunction,
                          const Stuff::LocalfunctionSetInterface

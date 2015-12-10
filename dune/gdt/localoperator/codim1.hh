@@ -83,7 +83,7 @@ public:
     return numTmpObjectsRequired_;
   }
 
-  template< class E, class N, class IntersectionType, class D, int d, class R, int rT, int rCT, int rA, int rCA >
+  template< class E, class N, class IntersectionType, class D, size_t d, class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void apply(const Stuff::LocalfunctionSetInterface< E, D, d, R, rT, rCT >& entityTestBase,
              const Stuff::LocalfunctionSetInterface< E, D, d, R, rA, rCA >& entityAnsatzBase,
              const Stuff::LocalfunctionSetInterface< N, D, d, R, rT, rCT >& neighborTestBase,
@@ -247,7 +247,7 @@ public:
     return numTmpObjectsRequired_;
   }
 
-  template< class E, class IntersectionType, class D, int d, class R, int rT, int rCT, int rA, int rCA >
+  template< class E, class IntersectionType, class D, size_t d, class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void apply(const Stuff::LocalfunctionSetInterface< E, D, d, R, rT, rCT >& testBase,
              const Stuff::LocalfunctionSetInterface< E, D, d, R, rA, rCA >& ansatzBase,
              const IntersectionType& intersection,

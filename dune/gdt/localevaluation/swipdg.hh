@@ -372,7 +372,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct order() method
    */
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const LocalfunctionTupleType& localFunctionsEntity,
                const LocalfunctionTupleType& localFunctionsNeighbor,
                const Stuff::LocalfunctionSetInterface
@@ -394,7 +394,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct evaluate() method
    */
-  template< class IntersectionType, class R, int rT, int rCT, int rA, int rCA >
+  template< class IntersectionType, class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const LocalfunctionTupleType& localFunctionsEntity,
                 const LocalfunctionTupleType& localFunctionsNeighbor,
                 const Stuff::LocalfunctionSetInterface
@@ -424,7 +424,7 @@ public:
              neighborEntityRet);
   }
 
-  template< class R, int rL, int rCL, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rL, size_t rCL, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const Stuff::LocalfunctionInterface
                    < EntityType, DomainFieldType, dimDomain, R, rL, rCL >& localFunctionEntity,
                const Stuff::LocalfunctionInterface
@@ -444,7 +444,7 @@ public:
   }
 
   template< class IntersectionType,
-            class R, int rL, int rCL, int rT, int rCT, int rA, int rCA >
+            class R, size_t rL, size_t rCL, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const Stuff::LocalfunctionInterface
                     < EntityType, DomainFieldType, dimDomain, R, rL, rCL >& /*localFunctionEntity*/,
                 const Stuff::LocalfunctionInterface
@@ -647,7 +647,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct order() method
    */
-  template< class R, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const LocalfunctionTupleType localFuncs,
                const Stuff::LocalfunctionSetInterface
                    < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& testBase,
@@ -661,7 +661,7 @@ public:
   /**
    *  \return localFunction.order() + testBase.order() + ansatzBase.order()
    */
-  template< class R, int rL, int rCL, int rT, int rCT, int rA, int rCA >
+  template< class R, size_t rL, size_t rCL, size_t rT, size_t rCT, size_t rA, size_t rCA >
   size_t order(const Stuff::LocalfunctionInterface
                    < EntityType, DomainFieldType, dimDomain, R, rL, rCL >& localFunction,
                const Stuff::LocalfunctionSetInterface
@@ -675,7 +675,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct evaluate() method
    */
-  template< class IntersectionType, class R, int rT, int rCT, int rA, int rCA >
+  template< class IntersectionType, class R, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const LocalfunctionTupleType localFuncs,
                 const Stuff::LocalfunctionSetInterface
                     < EntityType, DomainFieldType, dimDomain, R, rT, rCT >& testBase,
@@ -689,7 +689,7 @@ public:
     evaluate(*localFunction, testBase, ansatzBase, intersection, localPoint, ret);
   }
 
-  template< class IntersectionType, class R, int rL, int rCL, int rT, int rCT, int rA, int rCA >
+  template< class IntersectionType, class R, size_t rL, size_t rCL, size_t rT, size_t rCT, size_t rA, size_t rCA >
   void evaluate(const Stuff::LocalfunctionInterface
                     < EntityType, DomainFieldType, dimDomain, R, rL, rCL >& /*localFunction*/,
                 const Stuff::LocalfunctionSetInterface
@@ -798,7 +798,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct order() method
    */
-  template< class R, int r, int rC >
+  template< class R, size_t r, size_t rC >
   size_t order(const LocalfunctionTupleType localFuncs,
                const Stuff::LocalfunctionSetInterface
                    < EntityType, DomainFieldType, dimDomain, R, r, rC >& testBase) const
@@ -811,7 +811,7 @@ public:
   /**
    * \brief extracts the local functions and calls the correct evaluate() method
    */
-  template< class IntersectionType, class R, int r, int rC >
+  template< class IntersectionType, class R, size_t r, size_t rC >
   void evaluate(const LocalfunctionTupleType localFuncs,
                 const Stuff::LocalfunctionSetInterface< EntityType, DomainFieldType, dimDomain, R, r, rC >& testBase,
                 const IntersectionType& intersection,
@@ -827,7 +827,7 @@ private:
   /**
    *  \return std::max(testOrder + dirichletOrder, diffusionOrder + testGradientOrder + dirichletOrder);
    */
-  template< class R, int rLF, int rCLF, int rLR, int rCLR, int rT, int rCT >
+  template< class R, size_t rLF, size_t rCLF, size_t rLR, size_t rCLR, size_t rT, size_t rCT >
   size_t redirect_order(const Stuff::LocalfunctionInterface
                             < EntityType, DomainFieldType, dimDomain, R, rLF, rCLF >& localDiffusion,
                         const Stuff::LocalfunctionInterface
@@ -842,7 +842,7 @@ private:
       return std::max(testOrder + dirichletOrder, diffusionOrder + testGradientOrder + dirichletOrder);
   } // ... redirect_order(...)
 
-  template< class IntersectionType, class R, int rLDF, int rCLDF, int rLDR, int rCLDR, int rT, int rCT >
+  template< class IntersectionType, class R, size_t rLDF, size_t rCLDF, size_t rLDR, size_t rCLDR, size_t rT, size_t rCT >
   void redirect_evaluate(const Stuff::LocalfunctionInterface
                              < EntityType, DomainFieldType, dimDomain, R, rLDF, rCLDF >& /*localDiffusion*/,
                          const Stuff::LocalfunctionInterface

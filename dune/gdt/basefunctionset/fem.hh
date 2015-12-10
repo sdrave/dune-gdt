@@ -32,8 +32,8 @@ namespace BaseFunctionSet {
 
 // forward, to be used in the traits and to allow for specialization
 template< class ShapeFunctionSetImp, class EntityImp,
-          class DomainFieldImp, int domainDim,
-          class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+          class DomainFieldImp, size_t domainDim,
+          class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class FemWrapper
 {
   static_assert(Dune::AlwaysFalse< ShapeFunctionSetImp >::value, "Untested for these dimensions!");
@@ -41,8 +41,8 @@ class FemWrapper
 
 
 template< class ShapeFunctionSetImp, class EntityImp,
-          class DomainFieldImp, int domainDim,
-          class RangeFieldImp, int rangeDim, int rangeDimCols >
+          class DomainFieldImp, size_t domainDim,
+          class RangeFieldImp, size_t rangeDim, size_t rangeDimCols >
 class FemWrapperTraits
 {
 public:
@@ -55,8 +55,8 @@ public:
 
 
 template< class ShapeFunctionSetImp, class EntityImp,
-          class DomainFieldImp, int domainDim,
-          class RangeFieldImp, int rangeDim >
+          class DomainFieldImp, size_t domainDim,
+          class RangeFieldImp, size_t rangeDim >
 class FemWrapper< ShapeFunctionSetImp, EntityImp, DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >
   : public BaseFunctionSetInterface< FemWrapperTraits< ShapeFunctionSetImp, EntityImp,
                                                        DomainFieldImp, domainDim, RangeFieldImp, rangeDim, 1 >,
@@ -130,8 +130,8 @@ private:
 
 
 template< class ShapeFunctionSetImp, class EntityImp,
-          class DomainFieldImp, int domainDim,
-          class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+          class DomainFieldImp, size_t domainDim,
+          class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class FemWrapper
 {
   static_assert(Dune::AlwaysFalse< FemBaseFunctionSetTraits >::value, "You are missing dune-fem!");

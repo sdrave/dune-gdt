@@ -41,14 +41,14 @@ namespace DiscontinuousLagrange {
 
 
 // forward, to be used in the traits and to allow for specialization
-template< class GridViewImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class GridViewImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class PdelabBased
 {
   static_assert(Dune::AlwaysFalse< GridViewImp >::value, "Untested for this combination of dimensions!");
 }; //class PdelabBased
 
 
-template< class GridViewImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class GridViewImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class PdelabBasedTraits
 {
 public:
@@ -232,7 +232,7 @@ private:
 #else // HAVE_DUNE_PDELAB
 
 
-template< class GridViewImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class GridViewImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class PdelabBased
 {
   static_assert(Dune::AlwaysFalse< GridViewImp >::value, "You are missing dune-pdelab!");

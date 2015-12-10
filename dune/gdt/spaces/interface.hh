@@ -76,8 +76,8 @@ public:
   typedef typename Traits::CommunicatorType     CommunicatorType;
   typedef typename Traits::GridViewType         GridViewType;
   typedef typename Traits::RangeFieldType       RangeFieldType;
-  static const unsigned int                     dimRange = Traits::dimRange;
-  static const unsigned int                     dimRangeCols = Traits::dimRangeCols;
+  static const size_t                           dimRange = Traits::dimRange;
+  static const size_t                           dimRangeCols = Traits::dimRangeCols;
 
 private:
   static_assert(std::is_base_of< GridView< typename GridViewType::Traits >, GridViewType >::value,
@@ -85,7 +85,7 @@ private:
 
 public:
   typedef typename GridViewType::ctype              DomainFieldType;
-  static const unsigned int                         dimDomain = GridViewType::dimension;
+  static const size_t                               dimDomain = GridViewType::dimension;
   typedef FieldVector< DomainFieldType, dimDomain > DomainType;
 
   typedef typename GridViewType::template Codim< 0 >::Entity     EntityType;

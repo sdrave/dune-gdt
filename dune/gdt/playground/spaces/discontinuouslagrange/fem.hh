@@ -34,14 +34,14 @@ namespace DiscontinuousLagrange {
 
 
 // forward, to be used in the traits and to allow for specialization
-template< class GridPartImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class GridPartImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class FemBased
 {
   static_assert(Dune::AlwaysFalse< GridPartImp >::value, "Untested for these dimensions!");
 };
 
 
-template< class GridPartImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols >
+template< class GridPartImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols >
 class FemBasedTraits
 {
 public:
@@ -169,7 +169,7 @@ private:
 #else // HAVE_DUNE_FEM
 
 
-template< class GridPartImp, int polynomialOrder, class RangeFieldImp, int rangeDim, int rangeDimCols = 1 >
+template< class GridPartImp, int polynomialOrder, class RangeFieldImp, size_t rangeDim, size_t rangeDimCols = 1 >
 class FemBased
 {
   static_assert(Dune::AlwaysFalse< GridPartImp >::value, "You are missing dune-fem!");
