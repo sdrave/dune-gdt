@@ -6,6 +6,7 @@
 #ifndef DUNE_GDT_PLAYGROUND_LOCALEVALUATION_SWIPDG_HH
 #define DUNE_GDT_PLAYGROUND_LOCALEVALUATION_SWIPDG_HH
 
+#include <dune/stuff/common/float_cmp.hh>
 #include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/common/print.hh>
 #include <dune/stuff/common/timedlogging.hh>
@@ -185,7 +186,7 @@ public:
     //   the diffusion factor is supposed to be continuous
 #ifndef NDEBUG
 # ifndef DUNE_GDT_LOCALEVALUATION_SWIPDG_DISABLE_WARNINGS
-    if (!Stuff::Common::float_cmp(local_diffusion_factor_en, local_diffusion_factor_ne))
+    if (Stuff::Common::FloatCmp::ne(local_diffusion_factor_en, local_diffusion_factor_ne))
       DSC::TimedLogger().get("gdt.localevaluation.swipdg.inner").warn()
           << "The diffusion factor is assumed to be continuous across intersections, but\n"
           << "    localDiffusionFactorEntity   = " << local_diffusion_factor_en << "\n"
@@ -469,7 +470,7 @@ public:
     //   the diffusion factor is supposed to be continuous
 #ifndef NDEBUG
 # ifndef DUNE_GDT_LOCALEVALUATION_SWIPDG_DISABLE_WARNINGS
-    if (!Stuff::Common::float_cmp(local_diffusion_factor_en, local_diffusion_factor_ne))
+    if (Stuff::Common::FloatCmp::ne(local_diffusion_factor_en, local_diffusion_factor_ne))
       DSC::TimedLogger().get("gdt.localevaluation.swipdg.innerpenalty").warn()
           << "The diffusion factor is assumed to be continuous across intersections, but\n"
           << "    localDiffusionFactorEntity   = " << local_diffusion_factor_en << "\n"
