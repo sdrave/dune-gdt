@@ -202,6 +202,14 @@ private:
 }; // class OswaldInterpolation
 
 
+template< class G >
+std::unique_ptr< OswaldInterpolation< G > > make_oswald_interpolation(const G& grid_view,
+                                                                      const bool zero_boundary = true)
+{
+  return DSC::make_unique< OswaldInterpolation< G > >(grid_view, zero_boundary);
+}
+
+
 } // namespace Operators
 } // namespace GDT
 } // namespace Dune
