@@ -80,7 +80,11 @@ private:
                           const std::vector< std::shared_ptr< const L > >& local_spaces,
                           const Comdim0EntityType& entity)
     {
-      return local_spaces[find_block_of(glued_grid, entity)]->mapper().numDofs(glued_grid.global_to_local_entity(entity));
+      const auto local_entity_ptr = glued_grid.global_to_local_entity(entity);
+      const auto& local_entity = *local_entity_ptr;
+      const auto local_block = find_block_of(glued_grid, entity);
+      const auto& local_space = *local_spaces[local_block];
+      return local_space.mapper().numDofs(local_entity);
     }
 
     static void globalIndices(GluedGridType& glued_grid,
@@ -91,7 +95,9 @@ private:
     {
       const size_t block = find_block_of(glued_grid, entity);
       local_spaces[block]->mapper().globalIndices(entity, ret);
-      const size_t num_dofs = local_spaces[block]->mapper().numDofs(glued_grid.global_to_local_entity(entity));
+      const auto local_entity_ptr = glued_grid.global_to_local_entity(entity);
+      const auto& local_entity = *local_entity_ptr;
+      const size_t num_dofs = local_spaces[block]->mapper().numDofs(local_entity);
       assert(ret.size() >= num_dofs);
       for (size_t ii = 0; ii < num_dofs; ++ii)
         ret[ii] += global_start_indices[block];
@@ -104,7 +110,9 @@ private:
                               const size_t& localIndex)
     {
       const size_t block = find_block_of(glued_grid, entity);
-      const size_t block_local_index = local_spaces[block]->mapper().mapToGlobal(glued_grid.global_to_local_entity(entity),
+      const auto local_entity_ptr = glued_grid.global_to_local_entity(entity);
+      const auto& local_entity = *local_entity_ptr;
+      const size_t block_local_index = local_spaces[block]->mapper().mapToGlobal(local_entity,
                                                                                  localIndex);
       return global_start_indices[block] + block_local_index;
     }
@@ -174,7 +182,6 @@ public:
 
   size_t numDofs(const EntityType& entity) const
   {
-    DUNE_THROW(NotImplemented, "Does not work reliably yet!");
     DSC::TimedLogger().get("gdt.mapper.glued-block.numDofs").warn()
         << "Requiring access to global micro grid!" << std::endl;
     return Compute< LocalSpaceType, EntityType >::numDofs(glued_grid_, local_spaces_, entity);
@@ -182,7 +189,6 @@ public:
 
   void globalIndices(const EntityType& entity, Dune::DynamicVector< size_t >& ret) const
   {
-    DUNE_THROW(NotImplemented, "Does not work reliably yet!");
     DSC::TimedLogger().get("gdt.mapper.glued-block.globalIndices").warn()
         << "Requiring access to global micro grid!" << std::endl;
     Compute< LocalSpaceType, EntityType >::globalIndices(glued_grid_, local_spaces_, global_start_indices_, entity, ret);
@@ -190,7 +196,6 @@ public:
 
   size_t mapToGlobal(const EntityType& entity, const size_t& localIndex) const
   {
-    DUNE_THROW(NotImplemented, "Does not work reliably yet!");
     DSC::TimedLogger().get("gdt.mapper.glued-block.mapToGlobal").warn()
         << "Requiring access to global micro grid!" << std::endl;
     return Compute< LocalSpaceType, EntityType >::mapToGlobal(glued_grid_,
