@@ -27,6 +27,7 @@
 
 #include <dune/gdt/exceptions.hh>
 #include <dune/gdt/discretefunction/default.hh>
+#include <dune/gdt/spaces/fv/default.hh>
 #include <dune/gdt/spaces/cg/fem.hh>
 #include <dune/gdt/spaces/cg/pdelab.hh>
 
@@ -74,6 +75,14 @@ public:
   L2Prolongation(const GridViewType& grid_view)
     : grid_view_(grid_view)
   {}
+
+  template< class GPS, class R, size_t r, size_t rC, class VS, class GPR, class VR >
+  inline void apply(const ConstDiscreteFunction< Spaces::FV::Default< GPS, R, r, rC >, VS >& source,
+                    DiscreteFunction< Spaces::FV::Default< GPR, R, r, rC >, VR >&
+                      range) const
+  {
+    prolong_onto_dg_fem_localfunctions_wrapper(source, range);
+  }
 
   // Source: Spaces::CG::FemBased
   // Range:  Spaces::DG::FemBased
@@ -388,6 +397,16 @@ public:
   }
 
 private:
+  template< class GPS, class RS, size_t rS, size_t rCS, class VS,
+            class GPR, class RR, size_t rR, size_t rCR, class VR >
+  inline void redirect_to_appropriate_operator(const ConstDiscreteFunction< Spaces::FV::Default
+                                                  < GPS, RS, rS, rCS >, VS >& source,
+                                               DiscreteFunction< Spaces::FV::Default
+                                                  < GPR, RR, rR, rCR >, VR >& range) const
+  {
+    l2_prolongation_operator_.apply(source, range);
+  }
+
   template< class GPS, int pS, class RS, size_t rS, size_t rCS, class VS,
             class GPR, int pR, class RR, size_t rR, size_t rCR, class VR >
   inline void redirect_to_appropriate_operator(const ConstDiscreteFunction< Spaces::CG::FemBased
