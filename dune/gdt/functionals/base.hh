@@ -74,7 +74,6 @@ public:
   typedef VectorImp VectorType;
   using typename BaseFunctionalType::FieldType;
   using typename BaseFunctionalType::derived_type;
-  typedef LocalVolumeFunctionalInterface<typename SpaceType::BaseFunctionSetType, FieldType> LocalVolumeFunctionalType;
   typedef LocalFaceFunctionalInterface<typename SpaceType::BaseFunctionSetType,
                                        XT::Grid::extract_intersection_t<GridLayerType>,
                                        FieldType>
@@ -126,12 +125,10 @@ public:
   using BaseAssemblerType::append;
 
   ThisType& append(
-      const LocalVolumeFunctionalType& local_volume_functional,
+      const LocalVolumeFunctionalInterface<SpaceType, FieldType>& local_volume_functional,
       const XT::Grid::ApplyOn::WhichEntity<GridLayerType>* where = new XT::Grid::ApplyOn::AllEntities<GridLayerType>())
   {
-    typedef internal::LocalVolumeFunctionalWrapper<ThisType, VectorType> WrapperType;
-    this->codim0_functors_.emplace_back(
-        new WrapperType(this->test_space_, where, local_volume_functional, vector_.access()));
+    this->append(local_volume_functional, vector_.access(), where);
     return *this;
   }
 

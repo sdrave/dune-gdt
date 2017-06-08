@@ -213,6 +213,7 @@ public:
     return *this;
   } // ... append(...)
 
+
   template <class M, class R>
   ThisType& DUNE_DEPRECATED_MSG("Directly append the LocalCouplingTwoForm (13.05.2017)!")
       append(const LocalCouplingTwoFormAssembler<TestSpaceType,
@@ -358,18 +359,32 @@ public:
                                                                                  AnsatzSpaceType>(
         test_space_, ansatz_space_, where, local_boundary_two_form, matrix.as_imp()));
     return *this;
-  }
+  } // ... append(...)
 
   template <class V, class R>
-  ThisType& append(const LocalVolumeFunctionalAssembler<TestSpaceType, typename V::derived_type>& local_assembler,
-                   XT::LA::VectorInterface<V, R>& vector,
-                   const ApplyOnWhichEntity* where = new XT::Grid::ApplyOn::AllEntities<GridLayerType>())
+  ThisType& DUNE_DEPRECATED_MSG("Directly append the LocalFunctional (08.06.2017)!")
+      append(const LocalVolumeFunctionalAssembler<TestSpaceType, typename V::derived_type>& local_assembler,
+             XT::LA::VectorInterface<V, R>& vector,
+             const ApplyOnWhichEntity* where = new XT::Grid::ApplyOn::AllEntities<GridLayerType>())
   {
     assert(vector.size() == test_space_->mapper().size());
     typedef internal::LocalVolumeFunctionalVectorAssemblerWrapper<ThisType, typename V::derived_type> WrapperType;
     this->codim0_functors_.emplace_back(new WrapperType(test_space_, where, local_assembler, vector.as_imp()));
     return *this;
   } // ... append(...)
+
+
+  template <class V, class R>
+  ThisType& append(const LocalVolumeFunctionalInterface<TestSpaceType, R>& local_volume_functional,
+                   XT::LA::VectorInterface<V, R>& vector,
+                   const ApplyOnWhichEntity* where = new XT::Grid::ApplyOn::AllEntities<GridLayerType>())
+  {
+    this->codim0_functors_.emplace_back(
+        new LocalVolumeFunctionalAssemblerFunctor<TestSpaceType, typename V::derived_type, GridLayerType>(
+            test_space_, where, local_volume_functional, vector.as_imp()));
+    return *this;
+  } // ... append(...)
+
 
   template <class V, class R>
   ThisType&
