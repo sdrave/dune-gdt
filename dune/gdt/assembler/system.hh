@@ -374,7 +374,7 @@ public:
   } // ... append(...)
 
   template <class V, class R>
-  ThisType& append(const LocalVolumeFunctionalInterface<TestSpaceType, R>& local_volume_functional,
+  ThisType& append(const LocalVolumeFunctionalInterface<TestBaseType, R>& local_volume_functional,
                    XT::LA::VectorInterface<V, R>& vector,
                    const ApplyOnWhichEntity* where = new XT::Grid::ApplyOn::AllEntities<GridLayerType>())
   {
