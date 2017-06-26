@@ -540,11 +540,7 @@ public:
                        const EntityType& entity,
                        VectorType& global_vector)
   {
-    if (global_vector.rows() != test_space.mapper().size())
-      DUNE_THROW(XT::Common::Exceptions::shapes_do_not_match,
-                 "global_matrix.rows() = " << global_vector.rows() << "\n  "
-                                           << "test_space.mapper().size()"
-                                           << test_space.mapper().size());
+    // \todo: if statement for global indices?
     // prepare
     const size_t size = test_space.mapper().numDofs(entity);
     Dune::DynamicVector<FieldType> local_vector(size, 0.); // \todo: make mutable member, after SMP refactor
