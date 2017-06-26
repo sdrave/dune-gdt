@@ -385,16 +385,29 @@ public:
   } // ... append(...)
 
   template <class V, class R>
-  ThisType&
-  append(const LocalFaceFunctionalAssembler<TestSpaceType, IntersectionType, typename V::derived_type>& local_assembler,
-         XT::LA::VectorInterface<V, R>& vector,
-         const ApplyOnWhichIntersection* where = new XT::Grid::ApplyOn::AllIntersections<GridLayerType>())
+  ThisType& DUNE_DEPRECATED_MSG("Directly append the LocalFunctional (26.06.2017)!") append(
+      const LocalFaceFunctionalAssembler<TestSpaceType, IntersectionType, typename V::derived_type>& local_assembler,
+      XT::LA::VectorInterface<V, R>& vector,
+      const ApplyOnWhichIntersection* where = new XT::Grid::ApplyOn::AllIntersections<GridLayerType>())
   {
     assert(vector.size() == test_space_->mapper().size());
     typedef internal::LocalFaceFunctionalVectorAssemblerWrapper<ThisType, typename V::derived_type> WrapperType;
     this->codim1_functors_.emplace_back(new WrapperType(test_space_, where, local_assembler, vector.as_imp()));
     return *this;
   } // ... append(...)
+
+  template <class V, class R>
+  ThisType& append(const LocalFaceFunctionalInterface<TestBaseType, IntersectionType, R>& local_face_functional,
+                   XT::LA::VectorInterface<V, R>& vector,
+                   const ApplyOnWhichIntersection* where = new XT::Grid::ApplyOn::AllIntersections<GridLayerType>())
+  {
+    assert(vector.size() == test_space_->mapper().size());
+    this->codim1_functors_.emplace_back(
+        new LocalFaceFunctionalAssemblerFunctor<TestSpaceType, typename V::derived_type, GridLayerType>(
+            test_space_, where, local_face_functional, vector.as_imp()));
+    return *this;
+  } // ... append(...)
+
 
   void assemble(const bool use_tbb = false)
   {
