@@ -70,6 +70,7 @@ class VectorFunctionalBase
 public:
   typedef internal::VectorFunctionalBaseTraits<VectorImp, SpaceImp, GridLayerImp, FieldImp> Traits;
   typedef typename BaseAssemblerType::AnsatzSpaceType SpaceType;
+  typedef typename SpaceType::BaseFunctionSetType TestBaseType;
   using typename BaseAssemblerType::GridLayerType;
   typedef VectorImp VectorType;
   using typename BaseFunctionalType::FieldType;
@@ -125,7 +126,7 @@ public:
   using BaseAssemblerType::append;
 
   ThisType& append(
-      const LocalVolumeFunctionalInterface<SpaceType, FieldType>& local_volume_functional,
+      const LocalVolumeFunctionalInterface<TestBaseType, FieldType>& local_volume_functional,
       const XT::Grid::ApplyOn::WhichEntity<GridLayerType>* where = new XT::Grid::ApplyOn::AllEntities<GridLayerType>())
   {
     this->append(local_volume_functional, vector_.access(), where);
