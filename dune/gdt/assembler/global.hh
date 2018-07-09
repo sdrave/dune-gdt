@@ -22,7 +22,7 @@
 #include <dune/xt/grid/type_traits.hh>
 
 #include <dune/gdt/local/assembler/functional-assemblers.hh>
-#include <dune/gdt/local/assembler/two-form-assemblers.hh>
+#include <dune/gdt/local/assembler/bilinear-form-assemblers.hh>
 #include <dune/gdt/local/functionals/interfaces.hh>
 #include <dune/gdt/local/operators/interfaces.hh>
 #include <dune/gdt/spaces/interface.hh>
