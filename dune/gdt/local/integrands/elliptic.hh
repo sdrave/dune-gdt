@@ -43,7 +43,7 @@ public:
   using DiffusionTensorType = XT::Functions::GridFunctionInterface<E, d, d, F>;
 
   LocalEllipticIntegrand(const DiffusionFactorType& diffusion_factor, const DiffusionTensorType& diffusion_tensor)
-    : BaseType(diffusion_factor.parameter_type() + diffusion_tensor.parameter_type())
+    : BaseType(diffusion_factor.parameter_type())
     , diffusion_factor_(diffusion_factor)
     , diffusion_tensor_(diffusion_tensor)
     , local_diffusion_factor_(diffusion_factor_.local_function())

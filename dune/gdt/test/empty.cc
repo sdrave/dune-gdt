@@ -27,26 +27,37 @@
 
 #include <dune/xt/common/test/main.hxx> // <- this one has to come first (includes the config.h)!
 
-#include <dune/xt/la/container/common/matrix/dense.hh>
-#include <dune/xt/la/container/common/vector/dense.hh>
-#include <dune/xt/la/container/eye-matrix.hh>
+//#include <dune/xt/la/container/common/matrix/dense.hh>
+//#include <dune/xt/la/container/common/vector/dense.hh>
+//#include <dune/xt/la/container/eye-matrix.hh>
 #include <dune/xt/grid/gridprovider/cube.hh>
 #include <dune/xt/grid/grids.hh>
+
+#include <dune/xt/functions/indicator.hh>
 #include <dune/xt/functions/constant.hh>
 
 #include <dune/gdt/discretefunction/default.hh>
-#include <dune/gdt/functionals/vector-based.hh>
+//#include <dune/gdt/functionals/vector-based.hh>
+#include <dune/gdt/local/bilinear-forms/integrals.hh>
 #include <dune/gdt/functionals/l2.hh>
 #include <dune/gdt/local/integrands/product.hh>
-#include <dune/gdt/local/functionals/integrals.hh>
-#include <dune/gdt/local/operators/integrals.hh>
+#include <dune/gdt/local/integrands/elliptic.hh>
+//#include <dune/gdt/local/functionals/integrals.hh>
+//#include <dune/gdt/local/operators/integrals.hh>
 #include <dune/gdt/operators/matrix-based.hh>
 #include <dune/gdt/operators/weighted-l2.hh>
-#include <dune/gdt/spaces/l2/discontinuous-galerkin.hh>
-#include <dune/gdt/spaces/l2/finite-volume.hh>
+//#include <dune/gdt/spaces/l2/discontinuous-galerkin.hh>
+//#include <dune/gdt/spaces/l2/finite-volume.hh>
 #include <dune/gdt/spaces/h1/continuous-lagrange.hh>
-#include <dune/gdt/spaces/hdiv/raviart-thomas.hh>
+//#include <dune/gdt/spaces/hdiv/raviart-thomas.hh>
 #include <dune/gdt/assembler/global.hh>
+
+#include <dune/xt/grid/gridprovider.hh>
+
+#include <dune/xt/grid/layers.hh>
+
+#include <dune/grid/common/gridfactory.hh>
+#include <dune/xt/grid/dd/glued.hh>
 
 using namespace Dune;
 using namespace Dune::GDT;
@@ -63,15 +74,15 @@ GTEST_TEST(empty, main)
   ContinuousLagrangeSpace<GV, 1> space(grid_view);
 
   const XT::Functions::ConstantFunction<d> func(1);
-  const LocalElementProductIntegrand<E> product_integrand(func.as_localizable<E>());
-  const LocalElementIntegralOperator<E> local_op(product_integrand);
+  const LocalElementProductIntegrand<E> product_integrand(func.as_grid_function<E>());
+  const LocalElementIntegralBilinearForm<E> local_op(product_integrand);
 
   auto op = make_matrix_operator<XT::LA::CommonDenseMatrix<double>>(grid_view, space);
   op.append(local_op);
   op.assemble();
 
   auto functional =
-      make_l2_volume_vector_functional<XT::LA::CommonDenseVector<double>>(space, func.as_localizable<E>());
+      make_l2_volume_vector_functional<XT::LA::CommonDenseVector<double>>(space, func.as_grid_function<E>());
   functional.assemble();
 
   auto assembler = make_global_assembler(space);
@@ -89,9 +100,158 @@ GTEST_TEST(empty, main)
 
   auto local_dofs = dofs.localize();
   for (auto&& element : elements(grid_view))
-    std::cout << local_dofs.bind(element) << std::endl;
+    local_dofs.bind(element);
 
   std::cout << "functional.apply(df) = " << functional.apply(df) << std::endl;
   std::cout << "op.apply(df).dofs().vector() = " << op.apply(df).dofs().vector() << std::endl;
   std::cout << "op.apply_inverse(df).dofs().vector() = " << op.apply_inverse(df).dofs().vector() << std::endl;
+}
+
+/**
+ * LOD WORK
+ */
+
+using namespace Dune::XT::Grid;
+
+struct LODTest : public ::testing::Test
+{
+  using MacroGridType = YaspGrid<2, EquidistantOffsetCoordinates<double, 2>>;
+  using LocalGridType = MacroGridType; // UGGrid<2>;
+
+  using FunctionType = XT::Functions::IndicatorFunction<2>;
+
+  using RangeReturnType = typename FunctionType::RangeReturnType;
+  using DomainType = typename FunctionType::DomainType;
+
+  template <class G, bool anything = true>
+  struct get_local_layer
+  {
+    static const constexpr Layers type = Layers::level;
+  };
+
+  static const constexpr Layers local_layer = get_local_layer<LocalGridType>::type;
+
+  void setup_grids()
+  {
+    if (!macro_grid_)
+      macro_grid_ = std::make_unique<GridProvider<MacroGridType>>(make_cube_grid<MacroGridType>(0., 1., 4, 0));
+    ASSERT_NE(macro_grid_, nullptr) << "This should not happen!";
+    if (!dd_grid_)
+      dd_grid_ = std::make_unique<DD::Glued<MacroGridType, LocalGridType, local_layer>>(
+          *macro_grid_,
+          2,
+          /*prepare_glues=*/false,
+          /*allow_for_broken_orientation_of_coupling_intersections=*/true);
+    ASSERT_NE(dd_grid_, nullptr) << "This should not happen!";
+    for (auto&& macro_entity : Dune::elements(dd_grid_->macro_grid_view())) {
+      EXPECT_EQ(dd_grid_->max_local_level(macro_entity), (local_layer == Layers::level) ? 2 : -1);
+    }
+  } // ... setup()
+
+  std::unique_ptr<GridProvider<MacroGridType>> macro_grid_;
+  std::unique_ptr<DD::Glued<MacroGridType, LocalGridType, local_layer>> dd_grid_;
+  static const constexpr size_t d = 2;
+};
+
+TEST_F(LODTest, standard_problem)
+{
+  this->setup_grids();
+  //  auto micro_leaf_view = dd_grid_->global_grid_view();    // <- this is not working
+  auto grid = XT::Grid::make_cube_grid<MacroGridType>(0, 1, 16);
+  auto micro_leaf_view = grid.leaf_view();
+  using GV = decltype(micro_leaf_view);
+  using E = typename GV::template Codim<0>::Entity;
+  ContinuousLagrangeSpace<GV, 1> space(micro_leaf_view);
+  using SpaceType = ContinuousLagrangeSpace<GV, 1>;
+
+  RangeReturnType value(1. - 0.05);
+  std::vector<std::pair<XT::Common::FieldMatrix<double, d, 2>, RangeReturnType>> init;
+  for (auto xx = 2. / 16.; xx < 1 - 1. / 16.; xx += 4. / 16.) {
+    for (auto yy = 2. / 16.; yy < 1 - 1. / 16.; yy += 4. / 16.) {
+      std::pair<XT::Common::FieldMatrix<double, d, 2>, RangeReturnType> part;
+      part.second = value;
+      part.first[0][0] = xx;
+      part.first[0][1] = xx + 1. / 16.;
+      part.first[1][0] = yy;
+      part.first[1][1] = yy + 1. / 16.;
+      init.emplace_back(part);
+    }
+  }
+
+  XT::Common::FieldMatrix<double, d, d> eye(0.);
+  for (auto ii = 0; ii < d; ++ii)
+    eye[ii][ii] = 1;
+
+  const XT::Functions::ConstantFunction<d> constant(0.05);
+  const XT::Functions::ConstantFunction<d, d, d> eye_function(eye);
+  const XT::Functions::IndicatorFunction<d> func(init);
+
+  Dune::FieldVector<double, 1> new_value; // RangeType
+  new_value[0] = 1;
+  std::vector<std::pair<XT::Common::FieldMatrix<double, d, 2>, Dune::FieldVector<double, 1>>> new_init;
+  for (auto xx = 2. / 16.; xx < 1 - 1. / 16.; xx += 4. / 16.) {
+    for (auto yy = 2. / 16.; yy < 1 - 1. / 16.; yy += 4. / 16.) {
+      std::pair<XT::Common::FieldMatrix<double, d, 2>, Dune::FieldVector<double, 1>> part;
+      part.second = new_value;
+      part.first[0][0] = xx;
+      part.first[0][1] = xx + 1. / 16.;
+      part.first[1][0] = yy;
+      part.first[1][1] = yy + 1. / 16.;
+      new_init.emplace_back(part);
+    }
+  }
+
+  const XT::Functions::IndicatorGridFunction<E, 1> funci(new_init);
+  funci.visualize(micro_leaf_view, "test_grid_indicator");
+
+  auto coef = constant + func;
+  coef.visualize(micro_leaf_view, "test_indicator");
+
+  const XT::Functions::ConstantFunction<d> force(1);
+
+  // from cg.hh in test/problems/elliptic
+  const XT::LA::Backends la = XT::LA::default_sparse_backend;
+  typedef typename XT::LA::Container<double, la>::MatrixType MatrixType;
+  typedef typename XT::LA::Container<double, la>::VectorType VectorType;
+
+  auto logger = XT::Common::TimedLogger().get("hi");
+  logger.debug() << "grid has " << space.grid_view().indexSet().size(0) << " elements" << std::endl;
+  typedef typename SpaceType::GridViewType GridViewType;
+  typedef XT::Grid::extract_intersection_t<GridViewType> IntersectionType;
+  //  auto boundary_info = XT::Grid::BoundaryInfoFactory<IntersectionType>::create(problem.boundary_info_cfg());
+  logger.info() << "Assembling... " << std::endl;
+  VectorType rhs_vector(space.mapper().size(), 0.0);
+  //  std::cout << rhs_vector << std::endl;
+
+  auto op = make_matrix_operator<MatrixType>(micro_leaf_view, space);
+  const LocalEllipticIntegrand<E> elliptic_integrand(coef.as_grid_function<E>(), eye_function.as_grid_function<E>());
+  const LocalElementIntegralBilinearForm<E> local_op(elliptic_integrand);
+  op.append(local_op);
+  //  op.assemble();
+
+  const LocalElementProductIntegrand<E> product_integrand;
+  auto integrand = local_binary_to_unary_element_integrand(force.as_grid_function<E>(), product_integrand);
+  const LocalElementIntegralFunctional<E> integral_functional(integrand);
+  auto functional = make_vector_functional<VectorType>(space);
+  functional.append(integral_functional);
+  //  functional.assemble();
+
+  auto assembler = make_global_assembler(space);
+  assembler.append(functional);
+  assembler.append(op);
+  assembler.assemble();
+
+  logger.info() << "...Done " << std::endl;
+  //
+  //  assembler.append(functional);
+
+  VectorType local_solution(functional.vector().size());
+
+  //  std::cout << functional.vector() << std::endl;
+  std::cout << op.matrix() << std::endl;
+
+  XT::LA::Solver<MatrixType>(op.matrix()).apply(functional.vector(), local_solution);
+
+  //  Dune::GDT::DiscreteFunction<XT::LA::CommonDenseVector<double>,GV> discrete_function(space, local_solution);
+  //  discrete_function.visualize("geht?");
 }
