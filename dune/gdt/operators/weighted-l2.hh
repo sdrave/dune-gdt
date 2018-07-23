@@ -17,7 +17,7 @@
 #include <dune/xt/functions/interfaces/grid-function.hh>
 
 #include <dune/gdt/local/integrands/product.hh>
-#include <dune/gdt/local/operators/integrals.hh>
+#include <dune/gdt/local/bilinear-forms/integrals.hh>
 
 #include "matrix-based.hh"
 
@@ -144,7 +144,7 @@ public:
   using WeightFunctionType = XT::Functions::GridFunctionInterface<E, 1, 1, F>;
 
 private:
-  using LocalTwoFormType = LocalElementIntegralOperator<E, r, rC, RF, DofFieldType, r, rC, SF>;
+  using LocalTwoFormType = LocalElementIntegralBilinearForm<E, r, rC, RF, DofFieldType, r, rC, SF>;
   using LocalIntegrandType = LocalElementProductIntegrand<E, r, rC, RF, DofFieldType, r, rC, SF>;
 
 public:

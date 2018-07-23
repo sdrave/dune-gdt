@@ -22,7 +22,7 @@
 #include <dune/xt/grid/type_traits.hh>
 
 #include <dune/gdt/exceptions.hh>
-#include <dune/gdt/local/assembler/two-form-assemblers.hh>
+#include <dune/gdt/local/assembler/bilinear-form-assemblers.hh>
 #include <dune/gdt/local/bilinear-forms/interfaces.hh>
 #include <dune/gdt/operators/interfaces.hh>
 #include <dune/gdt/tools/sparsity-pattern.hh>

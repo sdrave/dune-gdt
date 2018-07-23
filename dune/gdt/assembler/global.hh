@@ -22,7 +22,7 @@
 #include <dune/xt/grid/type_traits.hh>
 
 #include <dune/gdt/local/assembler/functional-assemblers.hh>
-#include <dune/gdt/local/assembler/two-form-assemblers.hh>
+#include <dune/gdt/local/assembler/bilinear-form-assemblers.hh>
 #include <dune/gdt/local/functionals/interfaces.hh>
 #include <dune/gdt/local/operators/interfaces.hh>
 #include <dune/gdt/spaces/interface.hh>
@@ -68,7 +68,7 @@ public:
   using LocalElementFunctionalType =
       LocalElementFunctionalInterface<ElementType, test_range_dim, test_range_dim_cols, RangeField>;
 
-  using LocalElementTwoFormType = LocalElementTwoFormInterface<ElementType,
+  using LocalElementTwoFormType = LocalElementBilinearFormInterface<ElementType,
                                                                test_range_dim,
                                                                test_range_dim_cols,
                                                                RangeField,
@@ -156,7 +156,7 @@ public:
                    const XT::Common::Parameter& param = {},
                    const ElementFilterType& filter = ApplyOnAllElements())
   {
-    using LocalAssemblerType = LocalElementTwoFormAssembler<typename XT::LA::MatrixInterface<M>::derived_type,
+    using LocalAssemblerType = LocalElementBilinearFormAssembler<typename XT::LA::MatrixInterface<M>::derived_type,
                                                             GridViewType,
                                                             test_range_dim,
                                                             test_range_dim_cols,
